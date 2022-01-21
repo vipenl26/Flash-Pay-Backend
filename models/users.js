@@ -1,4 +1,5 @@
 // requiring all the necessary libraries.
+const { Int32 } = require("mongodb");
 const mongoose = require("mongoose");
 
 
@@ -19,7 +20,7 @@ const userSchema = new mongoose.Schema({
         description: "Gives the middle name of the user"
     },
     age: {
-        type:Integer,
+        type:Number,
         required:true,
         description:"Gives the age of the user"
     }
