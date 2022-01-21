@@ -26,9 +26,8 @@ const paymentSchema = new mongoose.Schema({
     },
 
     dateOfTransaction: {
-        required: true,
-        description: "Records the date of transaction"
-    },
+        type:String
+    }
 });
 
 const Payments = mongoose.model("Payments", paymentSchema);
