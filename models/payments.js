@@ -7,7 +7,7 @@ const paymentSchema = new mongoose.Schema({
         description: "This is the type of payment that can be done"
     },
 
-    paymentSource: {
+    paymentUserName: {
         type: String,
         required: true,
         description: "Specifies the source of the transaction"

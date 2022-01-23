@@ -11,6 +11,21 @@ const paymentsRouter = require('./routes/payments')
 
 var app = express();
 
+const mongoose = require('mongoose')
+
+url = "mongodb://127.0.0.1:27017/flash_pay";
+
+const connect = mongoose.connect(url)
+
+connect
+.then((db) => {
+  console.log("connected to mongodb connected");
+})
+.catch((err) => {
+  console.log(err)
+})
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
