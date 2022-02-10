@@ -5,26 +5,24 @@ const express = require("express");
 const router = express.Router();
 const Users = require("../models/users.js");
 
-var newPayments = [];
 // POST : request that is used to store any transaction that is happening
 router.post("/:id", (req, res) => {
-    // Users.findByIdAndUpdate(req.params.id,{$set:req.body}).then((data) => {
-    //     res.status(200).send(data);
-    // })
-    Users.find({_id:req.params.id}).then((data) => {
-        newPayments.push(req.body);
-        data.payments=newPayments;
-        //data.payments.push(req.body);
-        // newPayments = data.payments;
-        // Users.findByIdAndUpdate({_id:req.params.id},{payments:newPayments})
-        // .then((data2) => {
-        //     res.status(200).send(data2);
-        // })
-        // .catch((err2) => {
-        //     res.status(123).send()
-        // })
-        res.status(200).send(data);
-        // res.status(200).send(data);
+    Users.find({_id:req.params.id})
+    .then((data2) => {
+        	data2[0].payments.push(req.body);
+            console.log(data2[0]);
+            Users.findByIdAndUpdate({_id:req.params.id},{payments:data2[0].payments})
+            .then((datalol) => {
+                res.status(200).send(datalol);
+                console.log(datalol);
+            })
+            .catch((errlol) => {
+                res.status(500).send(errlol);
+                console.log(errlol);
+            })
+    })
+    .catch((err2) => {
+        res.status(123).send()
     })
     .catch((err) => {
         res.status(500).send(err);
@@ -35,7 +33,7 @@ router.post("/:id", (req, res) => {
 // GET : request that shows up by default when user opens up the payments page
 router.get("/:id", async (req, res) => {
     try {
-        Users.find({ _id: req.body.id })
+        Users.find({ _id: req.params.id })
             .then((user) => {
                 res.status(200);
                 res.send(user);
