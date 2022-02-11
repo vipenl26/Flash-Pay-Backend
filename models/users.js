@@ -33,20 +33,15 @@ const paymentSchema = new mongoose.Schema({
 });
 
 const userSchema = new mongoose.Schema({
-    firstName: {
+    fullName: {
         type: String,
         required: true,
-        description: "Gives the first name of the user"
+        description: "Gives the full name of the user"
     },
-    lastName: {
+    email:{
         type: String,
         required: true,
-        description: "Gives the last name of the user"
-    },
-    age: {
-        type: Number,
-        required: true,
-        description: "Gives the age of the user"
+        description: "email of the user"
     },
     username: {
         type: String,
