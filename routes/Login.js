@@ -13,7 +13,7 @@ Login.route("/").post(async (req, res, next) => {
       return;
     } else {
       if (doc.length > 0) {
-        return res.status(500).send("username already exists");
+        return res.status(500).send({message:"username already exists"});
       }
     }
 
@@ -30,7 +30,7 @@ Login.route("/").post(async (req, res, next) => {
       };
 
       Users.create(user);
-      res.end();
+      res.send({message:"user created sucessfully"})
     } catch {
       res.status(500).send();
     }
@@ -43,20 +43,16 @@ Login.route("/").put(async (req, res, next) => {
       console.log(err);
       return res.status(500).send();
     }
-    if (doc == null) {
-      res.status(500).send("username not found");
-      return;
-    }
     const user = doc;
 
     if (user == null) {
-      return res.status(400).send("cannot find user");
+      return res.status(400).send({message:"cannot find user"});
     }
     try {
       if (await bcrypt.compare(req.body.password, user.password)) {
-        res.send("Success");
+        res.send({message: "Successfully loggedin, Welcome"});
       } else {
-        return res.status(404).send("Password or Username is wrong");
+        return res.status(404).send({message:"Password or Username is wrong"});
       }
     } catch {
       res.status(500).send();
