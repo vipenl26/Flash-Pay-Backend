@@ -50,7 +50,8 @@ Login.route("/").put(async (req, res, next) => {
     }
     try {
       if (await bcrypt.compare(req.body.password, user.password)) {
-        res.send({message: "Successfully loggedin, Welcome"});
+        // console.log(user._id.toString())
+        res.send({message: "Successfully loggedin, Welcome", userid: user._id.toString()});
       } else {
         return res.status(404).send({message:"Password or Username is wrong"});
       }
