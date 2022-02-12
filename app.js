@@ -39,7 +39,7 @@ app.use(cors());
 
 app.use('/', indexRouter);
 // app.use('/users', usersRouter);
-// app.use('/payments',paymentsRouter);
+app.use('/payments',paymentsRouter);
 
 app.use("/login", Login);
 

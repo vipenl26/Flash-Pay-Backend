@@ -7,14 +7,36 @@ const Users = require("../models/users.js");
 
 // POST : request that is used to store any transaction that is happening
 router.post("/:id", (req, res) => {
-    Users.find({_id:req.params.id})
+    Users.findOne({username:req.body.paymentSource})
     .then((data2) => {
-        	data2[0].payments.push(req.body);
-            console.log(data2[0]);
-            Users.findByIdAndUpdate({_id:req.params.id},{payments:data2[0].payments})
+        	data2.payments.push(req.body);
+            // Users.findOne({username:req.body.paymentDestination})
+            // .then((data3) => {
+            //         data3[0].payments.push();
+            //         console.log(data3[0]);
+            //         Users.findByIdAndUpdate({_id:req.params.id},{payments:data3[0].payments})
+            //         .then((datalol) => {
+                        
+            //         })
+            //         .catch((errlol) => {
+            //             res.status(500).send(errlol);
+            //             console.log(errlol);
+            //         })
+            // })
+            // .catch((err2) => {
+            //     res.status(123).send()
+            // })
+            // .catch((err) => {
+            //     res.status(500).send(err);
+            // })
+
+            console.log(req.body)
+            Users.findByIdAndUpdate({_id:req.params.id},{payments:data2.payments})
             .then((datalol) => {
+                // console.log(datalol)
+                console.log("--------------------------")
                 res.status(200).send(datalol);
-                console.log(datalol);
+
             })
             .catch((errlol) => {
                 res.status(500).send(errlol);
