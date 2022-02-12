@@ -11,7 +11,7 @@ const paymentSchema = new mongoose.Schema({
 
     paymentSource: {
         type: String,
-        required: true,
+        required: false,
         description: "Specifies the source of the transaction"
     },
     paymentDestination:{
