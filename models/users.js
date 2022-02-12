@@ -14,6 +14,11 @@ const paymentSchema = new mongoose.Schema({
         required: true,
         description: "Specifies the source of the transaction"
     },
+    paymentDestination:{
+        type:String,
+        required:true,
+        description:"Recieptant",
+    },
 
     paymentDescription: {
         type: String,
@@ -28,7 +33,8 @@ const paymentSchema = new mongoose.Schema({
     },
 
     dateOfTransaction: {
-        type:String
+        type:String,
+        required:true,
     }
 });
 
@@ -52,6 +58,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         description: "Gives the password of the user"
+    },
+    balance:{
+        type:Number,
+        default:0,
+        required:false,
+        description:"User balance",
     },
    payments:[paymentSchema]
 });
