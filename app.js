@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const Login = require('./routes/Login');
 const GetData = require('./routes/GetData');
+const AddMoney = require('./routes/AddMoney');
 const cors = require('cors');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -44,6 +45,7 @@ app.use('/payments',paymentsRouter);
 
 app.use("/login", Login);
 app.use("/getdata",GetData);
+app.use("/AddMoney",AddMoney);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
