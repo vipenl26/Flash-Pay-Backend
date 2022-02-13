@@ -32,9 +32,9 @@ const paymentSchema = new mongoose.Schema({
         description: "Specifies the amount of transaction"
     },
 
-    dateOfTransaction: {
-        type:String,
-        required:true,
+    dateOfTransaction: { 
+        type : Date,
+        default: () => new Date(+new Date() + 1.98e+7)
     }
 });
 

@@ -5,93 +5,120 @@ const router = express.Router();
 const Users = require("../models/users.js");
 
 // POST : request that is used to store any transaction that is happening
-router.route("/").post((req, res) => {
-    // sender's id is passed in req
-    // but receiver's username is passed in req
-    // thats how things are!!
-    const senderEntry = {
+
+router.route("/").post(async (req, res) => {
+  // sender's id is passed in req
+  // but receiver's username is passed in req
+  // thats how things are!!
+  Users.findById(req.body.paymentSource)
+    .then((doc) => {
+      if (doc.balance - req.body.amount < 0) {
+        return res
+          .status(400)
+          .send({ message: "insufficient amount payment failed" });
+      }
+
+      Users.findOne({ username: req.body.paymentDestination })
+        .then((doc) => {
+          if (doc == null) {
+            return res
+              .status(400)
+              .send({ message: "username not found, payment failed" });
+          }
+          const senderEntry = {
             paymentType: req.body.paymentType,
             paymentDestination: req.body.paymentDestination,
             paymentDescription: req.body.paymentDescription,
-            amount: -1*parseFloat(req.body.amount),
-            dateOfTransaction: req.body.dateOfTransaction
-    }
-    Users.findByIdAndUpdate(req.body.paymentSource,{
-        $push: {"payments": senderEntry},
-        $inc: {"balance": -1*parseFloat(req.body.amount)}
-    },
-    (err, doc) => {
-        if(err){
-            console.log(err)
-            return res.status(400).send({message:"error occured"});
-        }
-        const recevierEntry = {
-            paymentType: req.body.paymentType,
-            paymentDestination: doc.username,
-            paymentDescription: req.body.paymentDescription,
-            amount: parseFloat(req.body.amount),
-            dateOfTransaction: req.body.dateOfTransaction
-        }
-        // console.log(doc);
-        Users.findOneAndUpdate({username: req.body.paymentDestination},
-                {$push: {"payments": recevierEntry},
-                $inc: {"balance": parseFloat(req.body.amount)}
+            amount: -1 * parseFloat(req.body.amount),
+          };
+          Users.findByIdAndUpdate(
+            req.body.paymentSource,
+            {
+              $push: { payments: senderEntry },
+              $inc: { balance: -1 * parseFloat(req.body.amount) },
             },
             (err, doc) => {
-                if(err){
-                    console.log(err)
-                    return res.status(400).send({message:"error occured"});
+              if (err) {
+                console.log(err);
+                return res.status(400).send({ message: "error occured" });
+              }
+              const recevierEntry = {
+                paymentType: req.body.paymentType,
+                paymentDestination: doc.username,
+                paymentDescription: req.body.paymentDescription,
+                amount: parseFloat(req.body.amount),
+              };
+              // console.log(doc);
+              Users.findOneAndUpdate(
+                { username: req.body.paymentDestination },
+                {
+                  $push: { payments: recevierEntry },
+                  $inc: { balance: parseFloat(req.body.amount) },
+                },
+                (err, doc) => {
+                  if (err) {
+                    console.log(err);
+                    return res.status(400).send({ message: "error occured" });
+                  }
+                  // console.log(doc)
+                  res.status(200).send({ message: "transaction success" });
                 }
-                // console.log(doc)
-                res.status(200).send({message:"transaction success"})
+              );
             }
-        )
-
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+          return res.status(400).send({ message: "payment failed" });
+        });
     })
+    .catch((err) => {
+      console.log(err);
+      return res.status(400).send({ message: "payment failed" });
+    });
 
-    // Users.findOne({username:req.body.paymentSource})
-    // .then((data2) => {
-    //     	data2.payments.push(req.body);
-    //         // Users.findOne({username:req.body.paymentDestination})
-    //         // .then((data3) => {
-    //         //         data3[0].payments.push();
-    //         //         console.log(data3[0]);
-    //         //         Users.findByIdAndUpdate({_id:req.params.id},{payments:data3[0].payments})
-    //         //         .then((datalol) => {
-                        
-    //         //         })
-    //         //         .catch((errlol) => {
-    //         //             res.status(500).send(errlol);
-    //         //             console.log(errlol);
-    //         //         })
-    //         // })
-    //         // .catch((err2) => {
-    //         //     res.status(123).send()
-    //         // })
-    //         // .catch((err) => {
-    //         //     res.status(500).send(err);
-    //         // })
+  // Users.findOne({username:req.body.paymentSource})
+  // .then((data2) => {
+  //     	data2.payments.push(req.body);
+  //         // Users.findOne({username:req.body.paymentDestination})
+  //         // .then((data3) => {
+  //         //         data3[0].payments.push();
+  //         //         console.log(data3[0]);
+  //         //         Users.findByIdAndUpdate({_id:req.params.id},{payments:data3[0].payments})
+  //         //         .then((datalol) => {
 
-    //         console.log(req.body)
-    //         Users.findByIdAndUpdate({_id:req.params.id},{payments:data2.payments})
-    //         .then((datalol) => {
-    //             // console.log(datalol)
-    //             console.log("--------------------------")
-    //             res.status(200).send(datalol);
+  //         //         })
+  //         //         .catch((errlol) => {
+  //         //             res.status(500).send(errlol);
+  //         //             console.log(errlol);
+  //         //         })
+  //         // })
+  //         // .catch((err2) => {
+  //         //     res.status(123).send()
+  //         // })
+  //         // .catch((err) => {
+  //         //     res.status(500).send(err);
+  //         // })
 
-    //         })
-    //         .catch((errlol) => {
-    //             res.status(500).send(errlol);
-    //             console.log(errlol);
-    //         })
-    // })
-    // .catch((err2) => {
-    //     res.status(123).send()
-    // })
-    // .catch((err) => {
-    //     res.status(500).send(err);
-    // })
+  //         console.log(req.body)
+  //         Users.findByIdAndUpdate({_id:req.params.id},{payments:data2.payments})
+  //         .then((datalol) => {
+  //             // console.log(datalol)
+  //             console.log("--------------------------")
+  //             res.status(200).send(datalol);
 
+  //         })
+  //         .catch((errlol) => {
+  //             res.status(500).send(errlol);
+  //             console.log(errlol);
+  //         })
+  // })
+  // .catch((err2) => {
+  //     res.status(123).send()
+  // })
+  // .catch((err) => {
+  //     res.status(500).send(err);
+  // })
 });
 // 61ed2688be6d4060e2a5c48b
 // GET : request that shows up by default when user opens up the payments page
@@ -105,7 +132,6 @@ router.route("/").post((req, res) => {
 //             .catch((er) => {
 //                 res.send(er);
 //             })
-
 
 //         // if (!data) {
 //         //     return res.status(404).send("Not found!");
@@ -128,6 +154,5 @@ router.route("/").post((req, res) => {
 //         res.status(500).send("Unexpected error from the server!");
 //     }
 // })
-
 
 module.exports = router;
