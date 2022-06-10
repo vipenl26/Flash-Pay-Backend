@@ -10,12 +10,13 @@ const cors = require('cors');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const paymentsRouter = require('./routes/payments')
+require("dotenv").config();
 
 var app = express();
 
 const mongoose = require('mongoose')
 
-url = "mongodb://127.0.0.1:27017/flash_pay";
+url = process.env.database_url || "mongodb://127.0.0.1:27017/flash_pay";
 
 const connect = mongoose.connect(url)
 
