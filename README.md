@@ -1,2 +1,8 @@
 # Flash-Pay-Backend
-Backend for Flash Pay app
+
+Flash Pay backend primarily uses NodeJS, MongoDB and ExpressJS modules along with other modules to 
+encrypt passwords. 
+
+## This is the deployed website.
+
+### https://main--flash-pay.netlify.app/dashboard
