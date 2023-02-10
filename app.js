@@ -6,6 +6,7 @@ var logger = require('morgan');
 const Login = require('./routes/Login');
 const GetData = require('./routes/GetData');
 const AddMoney = require('./routes/AddMoney');
+const verifyUser = require('./routes/verifyUser')
 const cors = require('cors');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -14,7 +15,8 @@ require("dotenv").config();
 
 var app = express();
 
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const { verify } = require('crypto');
 
 url = process.env.database_url || "mongodb://127.0.0.1:27017/flash_pay";
 
@@ -47,6 +49,7 @@ app.use('/payments',paymentsRouter);
 app.use("/login", Login);
 app.use("/getdata",GetData);
 app.use("/AddMoney",AddMoney);
+app.use("/verifyUser",verifyUser);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
